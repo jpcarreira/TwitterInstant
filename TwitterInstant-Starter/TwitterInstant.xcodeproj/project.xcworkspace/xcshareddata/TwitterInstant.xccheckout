@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>482657B4-379F-4977-B909-90086F83F3FE</string>
+	<key>IDESourceControlProjectName</key>
+	<string>TwitterInstant</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>748BA248-53F0-493F-97E2-427AB364504E</key>
+		<string>https://github.com/jpcarreira/TwitterInstant.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>TwitterInstant-Starter/TwitterInstant.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>748BA248-53F0-493F-97E2-427AB364504E</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/jpcarreira/TwitterInstant.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>748BA248-53F0-493F-97E2-427AB364504E</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>748BA248-53F0-493F-97E2-427AB364504E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>TwitterInstant</string>
+		</dict>
+	</array>
+</dict>
+</plist>
