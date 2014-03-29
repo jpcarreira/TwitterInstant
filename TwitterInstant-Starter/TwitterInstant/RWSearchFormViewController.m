@@ -9,6 +9,7 @@
 #import "RWSearchFormViewController.h"
 #import "RWSearchResultsViewController.h"
 #import <ReactiveCocoa.h>
+#import "RACEXTScope.h"
 
 @interface RWSearchFormViewController ()
 
@@ -53,12 +54,23 @@
 // takes the search field text, transforms ('maps') it to a UIColor and applies it to text field background color
 -(void)updateTextFieldBackgroundColorIfTextIsValid
 {
-    [[self.searchText.rac_textSignal map:^id(NSString *text){
-        return [self isValidSearchText:text] ? [UIColor whiteColor] : [UIColor yellowColor];
-    }]
-    subscribeNext:^(UIColor *color){
-        self.searchText.backgroundColor = color;
-    }];
+    RACSignal *validSearchTextSignal = [self validSearchTextSignal];
+    
+    RAC(self.searchText, backgroundColor) =
+        [validSearchTextSignal
+         map:^(NSNumber *number){
+             return [number boolValue] ? [UIColor whiteColor] : [UIColor yellowColor];
+         }];
+}
+
+
+// gets a RAC signal from a valid search text field
+-(RACSignal *)validSearchTextSignal
+{
+    return [self.searchText.rac_textSignal
+            map:^id(NSString *text){
+                return @([self isValidSearchText:text]);
+            }];
 }
 
 
