@@ -65,10 +65,27 @@ static NSString * const RWTwitterInstantDomain = @"TwitterInstant";
     self.twitterAccountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
     
     // subscribing the RAC signal to get access to the twitter account
-    [[self requestAccessToTwitterSignal]
+    [[[[self requestAccessToTwitterSignal]
+      
+        // chaining
+        // (the application need to wait for the signal that requests access to twitter to emit
+        // its completed event and then subscribe the next text field's signal)
+        // (the then method waits until a completed event is emitted and then subscribes to the signal returned
+        // by its block parameter, thus effectively passing control from one signal to the next; error events
+        // are also passed through)
+        then:^RACSignal*{
+            return self.searchText.rac_textSignal;
+        }]
+     
+        // adding a filter to the pipeline to remove invalid search strings (<3 chars)
+        filter:^BOOL(NSString *text){
+            return [self isValidSearchText:text];
+        }]
+     
+     
         subscribeNext:^(id x)
         {
-            NSLog(@"Access granted!");
+            NSLog(@"%@", x);
         }
         error:^(NSError *error)
         {
