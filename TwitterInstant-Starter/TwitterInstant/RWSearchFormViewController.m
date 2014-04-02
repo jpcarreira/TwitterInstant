@@ -68,7 +68,7 @@ static NSString * const RWTwitterInstantDomain = @"TwitterInstant";
     self.twitterAccountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
     
     // subscribing the RAC signal to get access to the twitter account
-    [[[[[[self requestAccessToTwitterSignal]
+    [[[[[[[self requestAccessToTwitterSignal]
       
         // chaining
         // (the application need to wait for the signal that requests access to twitter to emit
@@ -85,6 +85,10 @@ static NSString * const RWTwitterInstantDomain = @"TwitterInstant";
             return [self isValidSearchText:text];
         }]
      
+        // throttling for 0.5 seconds
+        // (we will only send a next event if another next event isn't receivec within half a second)
+        throttle:0.5]
+       
         // subscribing to the signal for search twitter with a flatten map
         flattenMap:^RACStream *(NSString *text)
         {
