@@ -12,6 +12,9 @@
 #import "RACEXTScope.h"
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
+#import "RWTweet.h"
+#import "NSArray+LinqExtensions.h"
+
 
 
 // enumeration for Twitter connection status
@@ -90,9 +93,15 @@ static NSString * const RWTwitterInstantDomain = @"TwitterInstant";
      
         // delivering on the main thread as it's a UI update
         deliverOn:[RACScheduler mainThreadScheduler]]
-        subscribeNext:^(id x)
+     
+        // updating the UI with tweets
+        subscribeNext:^(NSDictionary *jsonSearchResult)
         {
-            NSLog(@"%@", x);
+            NSArray *statuses = jsonSearchResult[@"statuses"];
+            NSArray *tweets = [statuses linq_select:^id(id tweet) {
+                return [RWTweet tweetWithStatus:tweet];
+            }];
+            [self.resultsViewController displayTweets:tweets];
         }
     
         error:^(NSError *error)
