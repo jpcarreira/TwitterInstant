@@ -6,6 +6,12 @@
 // project.
 
 
+// LinqToObjectiveC
+#define COCOAPODS_POD_AVAILABLE_LinqToObjectiveC
+#define COCOAPODS_VERSION_MAJOR_LinqToObjectiveC 2
+#define COCOAPODS_VERSION_MINOR_LinqToObjectiveC 0
+#define COCOAPODS_VERSION_PATCH_LinqToObjectiveC 0
+
 // ReactiveCocoa
 #define COCOAPODS_POD_AVAILABLE_ReactiveCocoa
 #define COCOAPODS_VERSION_MAJOR_ReactiveCocoa 2

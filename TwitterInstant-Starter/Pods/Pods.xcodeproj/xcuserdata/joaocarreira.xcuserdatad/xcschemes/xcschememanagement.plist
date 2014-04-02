@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Pods-LinqToObjectiveC.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-ReactiveCocoa.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -17,12 +22,17 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>7DB0AF62316B4DF3AD889E7C</key>
+		<key>2580DAFF75B744B5BB1923B2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7F6EEB09D3F046F096F4931E</key>
+		<key>FBC16926C09F435DB2524EF8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FC2A263FFE5E4577BD92767A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
