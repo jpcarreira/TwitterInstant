@@ -65,7 +65,7 @@ static NSString * const RWTwitterInstantDomain = @"TwitterInstant";
     self.twitterAccountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
     
     // subscribing the RAC signal to get access to the twitter account
-    [[[[self requestAccessToTwitterSignal]
+    [[[[[self requestAccessToTwitterSignal]
       
         // chaining
         // (the application need to wait for the signal that requests access to twitter to emit
@@ -82,11 +82,17 @@ static NSString * const RWTwitterInstantDomain = @"TwitterInstant";
             return [self isValidSearchText:text];
         }]
      
+        // subscribing to the signal for search twitter with a flatten map
+        flattenMap:^RACStream *(NSString *text)
+        {
+            return [self signalForSearchWithText:text];
+        }]
      
         subscribeNext:^(id x)
         {
             NSLog(@"%@", x);
         }
+    
         error:^(NSError *error)
         {
             NSLog(@"Error: %@", error);
@@ -163,12 +169,79 @@ static NSString * const RWTwitterInstantDomain = @"TwitterInstant";
 }
 
 
+// creating a signal based on the SLRequest
+-(RACSignal *)signalForSearchWithText:(NSString *)text
+{
+    // defining the errors
+    // (one if the user hasn't add any twitter accounts to their device and another for query-related errors)
+    NSError *noAccountsError = [NSError errorWithDomain:RWTwitterInstantDomain code:RWTwitterInstantErrorNoTwitterAccounts userInfo:nil];
+    NSError *invalidResponseError = [NSError errorWithDomain:RWTwitterInstantDomain code:RWTwitterInstantErrorInvalidResponse userInfo:nil];
+    
+    // creating the signal block
+    @weakify(self)
+    return [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber){
+        @strongify(self);
+        
+        // creating the request for the given search string using the method indicated
+        SLRequest *request = [self requestForTwitterSearchWithText:text];
+        
+        // supplying a twitter account
+        // (querrying the account store for the first available twitter account)
+        NSArray *twitterAccounts = [self.accountStore accountsWithAccountType:self.twitterAccountType];
+        
+        if(twitterAccounts.count == 0)
+        {
+            [subscriber sendError:noAccountsError];
+        }
+        else
+        {
+            [request setAccount:[twitterAccounts lastObject]];
+            
+            // performing the request
+            [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error){
+                
+                // if successfull, we'll parse the response
+                // (the JSON data is parsed and emitted along as a next event followed by a completed event)
+               if(urlResponse.statusCode == 200)
+               {
+                   NSDictionary *timelineData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:nil];
+                   [subscriber sendNext:timelineData];
+                   [subscriber sendCompleted];
+               }
+                
+                // sending error on failure
+                else
+                {
+                    [subscriber sendError:invalidResponseError];
+                }
+            }];
+        }
+        return nil;
+    }];
+}
+
+
+
 #pragma mark - auxiliary methods
 
 // validating the search text to have at least 2 characters
 -(BOOL)isValidSearchText:(NSString *)text
 {
     return text.length > 2;
+}
+
+
+// creating a request that searches twitter via the v1.1 REST API
+// (uses the q search parameter to search for tweets that contain the given search string)
+-(SLRequest *)requestForTwitterSearchWithText:(NSString *)text
+{
+    NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1.1/search/tweets.json"];
+    
+    NSDictionary *params = @{@"q" : text};
+    
+    SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:url parameters:params];
+    
+    return request;
 }
 
 @end
