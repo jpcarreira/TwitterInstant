@@ -65,7 +65,7 @@ static NSString * const RWTwitterInstantDomain = @"TwitterInstant";
     self.twitterAccountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
     
     // subscribing the RAC signal to get access to the twitter account
-    [[[[[self requestAccessToTwitterSignal]
+    [[[[[[self requestAccessToTwitterSignal]
       
         // chaining
         // (the application need to wait for the signal that requests access to twitter to emit
@@ -88,6 +88,8 @@ static NSString * const RWTwitterInstantDomain = @"TwitterInstant";
             return [self signalForSearchWithText:text];
         }]
      
+        // delivering on the main thread as it's a UI update
+        deliverOn:[RACScheduler mainThreadScheduler]]
         subscribeNext:^(id x)
         {
             NSLog(@"%@", x);
